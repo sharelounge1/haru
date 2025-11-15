@@ -7,6 +7,10 @@ import SignupTypeScreen from './components/screens/auth/SignupTypeScreen'
 import ClientSignupScreen from './components/screens/auth/ClientSignupScreen'
 import SecretarySignupScreen from './components/screens/auth/SecretarySignupScreen'
 
+// Unified Screens
+import UnifiedHomeScreen from './components/screens/UnifiedHomeScreen'
+import UnifiedMyScreen from './components/screens/UnifiedMyScreen'
+
 // Client Screens
 import ClientHomeScreen from './components/screens/client/ClientHomeScreen'
 import ClientHomeScreenAlt from './components/screens/client/ClientHomeScreenAlt'
@@ -42,6 +46,10 @@ function App() {
         <Route path="/signup" element={<SignupTypeScreen />} />
         <Route path="/signup/client" element={<ClientSignupScreen />} />
         <Route path="/signup/secretary" element={<SecretarySignupScreen />} />
+
+        {/* Unified Routes - Main */}
+        <Route path="/home" element={<UnifiedHomeScreen />} />
+        <Route path="/my" element={<UnifiedMyScreen />} />
 
         {/* Client Routes - Mobile App Style */}
         <Route path="/client" element={<ClientHomeScreen />} />
