@@ -11,6 +11,16 @@ import SecretarySignupScreen from './components/screens/auth/SecretarySignupScre
 import UnifiedHomeScreen from './components/screens/UnifiedHomeScreen'
 import UnifiedMyScreen from './components/screens/UnifiedMyScreen'
 
+// Detail Screens
+import SecretaryDetailScreen from './components/screens/SecretaryDetailScreen'
+import JobDetailScreen from './components/screens/JobDetailScreen'
+
+// My Page Screens
+import ProfileEditScreen from './components/screens/ProfileEditScreen'
+import ContractsScreen from './components/screens/ContractsScreen'
+import PaymentsScreen from './components/screens/PaymentsScreen'
+import SettingsScreen from './components/screens/SettingsScreen'
+
 // Client Screens
 import ClientHomeScreen from './components/screens/client/ClientHomeScreen'
 import ClientHomeScreenAlt from './components/screens/client/ClientHomeScreenAlt'
@@ -50,6 +60,16 @@ function App() {
         {/* Unified Routes - Main */}
         <Route path="/home" element={<UnifiedHomeScreen />} />
         <Route path="/my" element={<UnifiedMyScreen />} />
+
+        {/* Detail Routes */}
+        <Route path="/secretary/:id" element={<SecretaryDetailScreen />} />
+        <Route path="/job/:id" element={<JobDetailScreen />} />
+
+        {/* My Page Routes */}
+        <Route path="/my/profile/edit" element={<ProfileEditScreen />} />
+        <Route path="/my/contracts" element={<ContractsScreen />} />
+        <Route path="/my/payments" element={<PaymentsScreen />} />
+        <Route path="/my/settings" element={<SettingsScreen />} />
 
         {/* Client Routes - Mobile App Style */}
         <Route path="/client" element={<ClientHomeScreen />} />
