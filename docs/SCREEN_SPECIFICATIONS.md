@@ -183,15 +183,122 @@
   <td>
     <strong>주요 기능:</strong>
     <ul>
-      <li>5개 메인 메뉴 카드</li>
+      <li>6개 메인 메뉴 카드</li>
       <li>최근 매칭 내역 (3개)</li>
+      <li>인증 배지 표시</li>
       <li>알림 배지</li>
       <li>프로필 미리보기</li>
     </ul>
     <strong>프로세스:</strong>
     <ol>
       <li>로그인 성공 → 경영자 홈 표시</li>
+      <li>인증 배지 확인 (사업자, 매출, 연봉)</li>
       <li>메뉴 선택 → 해당 화면 이동</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-001-1</td>
+  <td><strong>본인인증</strong><br/><code>/client/verifications/identity</code></td>
+  <td><em>스크린샷 예정</em><br/><code>client-identity-verification-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>NICE 본인인증 시작 버튼</li>
+      <li>인증 상태 표시</li>
+      <li>인증 완료 시 배지 표시</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>본인인증 버튼 클릭 → NICE 팝업</li>
+      <li>인증 완료 → 상태 업데이트</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-001-2</td>
+  <td><strong>사업자 인증</strong><br/><code>/client/verifications/business</code></td>
+  <td><em>스크린샷 예정</em><br/><code>business-verification-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>API 간편인증 선택</li>
+      <li>서류 제출 선택</li>
+      <li>인증 현황 표시</li>
+      <li>승인 상태 확인</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>인증 방법 선택 (API / 서류)</li>
+      <li>API 선택 → 사업자번호 입력 → 즉시 인증</li>
+      <li>서류 선택 → 파일 업로드 → 관리자 승인 대기</li>
+      <li>승인 완료 → 배지 부여</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-001-3</td>
+  <td><strong>매출 인증</strong><br/><code>/client/verifications/revenue</code></td>
+  <td><em>스크린샷 예정</em><br/><code>revenue-verification-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>API 간편인증 (국세청 연동)</li>
+      <li>재무제표 서류 제출</li>
+      <li>인증 현황 표시</li>
+      <li>배지 레벨 표시</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>인증 방법 선택</li>
+      <li>API → 동의 후 자동 인증</li>
+      <li>서류 → 파일 업로드 → 관리자 승인 대기</li>
+      <li>승인 → 배지 부여 (매출 규모별)</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-001-4</td>
+  <td><strong>연봉 인증</strong><br/><code>/client/verifications/salary</code></td>
+  <td><em>스크린샷 예정</em><br/><code>salary-verification-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>API 간편인증 (금융기관 연동)</li>
+      <li>원천징수영수증 제출</li>
+      <li>인증 현황 표시</li>
+      <li>배지 레벨 표시</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>인증 방법 선택</li>
+      <li>API → 은행 계좌 연동 동의 → 자동 인증</li>
+      <li>서류 → 원천징수영수증 업로드 → 관리자 승인 대기</li>
+      <li>승인 → 배지 부여 (연봉 수준별)</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-001-5</td>
+  <td><strong>내 배지</strong><br/><code>/client/mypage/badges</code></td>
+  <td><em>스크린샷 예정</em><br/><code>client-my-badges-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>획득한 배지 목록</li>
+      <li>배지별 상세 정보</li>
+      <li>미획득 배지 안내</li>
+      <li>인증 시작 링크</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>배지 현황 확인</li>
+      <li>미획득 배지 클릭 → 인증 화면 이동</li>
     </ol>
   </td>
 </tr>
@@ -203,17 +310,20 @@
   <td>
     <strong>주요 기능:</strong>
     <ul>
-      <li>제목 입력 (예: "강원도 출장 운전 동행")</li>
+      <li>제목 입력</li>
       <li>업무 내용 상세 입력</li>
-      <li>기간 선택 (시작일, 종료일)</li>
-      <li>시간 선택</li>
+      <li>날짜 선택 (시작일, 종료일 또는 "상관없음")</li>
+      <li>시간 선택 (시작 시간, 종료 시간 또는 "상관없음")</li>
       <li>지역 선택 (드롭다운)</li>
-      <li>예상 급여 입력</li>
+      <li>원하는 비서 종류 선택 (선택사항)</li>
+        - 개인 비서, 업무 비서, 출장 비서, 요가 비서 등</li>
+      <li>제시 금액 입력</li>
       <li>등록 버튼</li>
     </ul>
     <strong>프로세스:</strong>
     <ol>
       <li>필수 정보 입력 → 유효성 검증</li>
+      <li>"상관없음" 선택 시 검색 필터에서 모든 조건 노출</li>
       <li>등록 버튼 클릭 → API 호출 (POST /job-requests)</li>
       <li>성공 → 내 요청 목록으로 이동</li>
     </ol>
@@ -265,22 +375,94 @@
 
 <tr>
   <td>HS-CLIENT-005</td>
-  <td><strong>비서 검색</strong><br/><code>/client/secretaries/search</code></td>
+  <td><strong>비서 검색 (고급 필터)</strong><br/><code>/client/secretaries/search</code></td>
   <td><em>스크린샷 예정</em><br/><code>secretary-search-screen.png</code></td>
   <td>
     <strong>주요 기능:</strong>
     <ul>
-      <li>검색바</li>
+      <li>검색바 (키워드 검색)</li>
+      <li>나이 필터 (최소/최대)</li>
+      <li>성별 필터</li>
       <li>지역 필터</li>
+      <li>비서 배지 필터 (영어, 운전 등)</li>
+      <li>비서 카테고리 필터 (개인/업무/출장/요가 등)</li>
       <li>평점 필터 (4.0 이상 등)</li>
-      <li>경력 필터</li>
-      <li>비서 카드 목록 (사진, 이름, 평점, 간단 소개)</li>
+      <li>비서 카드 목록 (사진 1장, 이름, 나이, 평점, 배지, 간단 소개)</li>
     </ul>
     <strong>프로세스:</strong>
     <ol>
       <li>필터 적용 → API 호출 (GET /secretaries)</li>
-      <li>비서 목록 표시</li>
-      <li>비서 클릭 → 공개 프로필 화면</li>
+      <li>비서 목록 표시 (결제 전 프리뷰)</li>
+      <li>비서 클릭 → 프리뷰 화면 (결제 전)</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-005-1</td>
+  <td><strong>비서 프로필 프리뷰</strong><br/><code>/client/secretaries/:id</code></td>
+  <td><em>스크린샷 예정</em><br/><code>secretary-profile-preview-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>프로필 사진 1장 미리보기</li>
+      <li>나이 표시</li>
+      <li>간단한 이력 (학력, 경력 요약)</li>
+      <li>배지 표시</li>
+      <li>전체 프로필 보기 버튼 (결제 필요 안내)</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>제한된 정보 표시</li>
+      <li>전체 프로필 보기 클릭 → 결제 화면</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-005-2</td>
+  <td><strong>프로필 열람 결제</strong><br/><code>/client/secretaries/:id/payment</code></td>
+  <td><em>스크린샷 예정</em><br/><code>profile-view-payment-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>열람 비용 표시 (어드민 설정 금액)</li>
+      <li>결제 수단 선택 (카드, 카카오페이, 네이버페이)</li>
+      <li>결제하기 버튼</li>
+      <li>취소 버튼</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>열람 비용 확인</li>
+      <li>결제 수단 선택 → 결제 진행</li>
+      <li>결제 완료 → 전체 프로필 열람 권한 부여</li>
+      <li>전체 프로필 화면으로 자동 이동</li>
+    </ol>
+  </td>
+</tr>
+
+<tr>
+  <td>HS-CLIENT-005-3</td>
+  <td><strong>비서 전체 프로필</strong><br/><code>/client/secretaries/:id/full</code></td>
+  <td><em>스크린샷 예정</em><br/><code>secretary-full-profile-screen.png</code></td>
+  <td>
+    <strong>주요 기능:</strong>
+    <ul>
+      <li>프로필 사진 여러 장</li>
+      <li>이름, 나이, 성별</li>
+      <li>자기소개 전체</li>
+      <li>상세 경력 및 학력</li>
+      <li>능력 (스킬)</li>
+      <li>가능 지역</li>
+      <li>비서 카테고리</li>
+      <li>배지 목록</li>
+      <li>받은 리뷰 목록</li>
+      <li>직접 제안 버튼</li>
+    </ul>
+    <strong>프로세스:</strong>
+    <ol>
+      <li>전체 프로필 정보 표시</li>
+      <li>직접 제안 → 채팅 또는 구인 요청 작성</li>
     </ol>
   </td>
 </tr>

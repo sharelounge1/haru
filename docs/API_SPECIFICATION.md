@@ -217,9 +217,198 @@ Authorization: Bearer <Supabase_JWT_Token>
 
 ---
 
-## 2. 본인인증 API (NICE Verification)
+## 2. 경영자 인증 API (Client Verification)
 
-### 2.1. 본인인증 시작
+### 2.1. 사업자 인증 - API 간편인증 시작
+
+- **Endpoint**: `POST /client-verifications/business/api/start`
+- **설명**: 사업자 API 간편인증 시작
+- **인증**: 필수 (경영자)
+- **Request**:
+```json
+{
+  "businessNumber": "123-45-67890",
+  "companyName": "주식회사 하루"
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "biz_verify_001",
+    "status": "pending",
+    "message": "사업자 인증이 진행 중입니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.2. 사업자 인증 - 서류 제출
+
+- **Endpoint**: `POST /client-verifications/business/document`
+- **설명**: 사업자 등록증 서류 업로드
+- **인증**: 필수 (경영자)
+- **Request**: multipart/form-data
+```
+file: [사업자등록증 파일]
+businessNumber: "123-45-67890"
+companyName: "주식회사 하루"
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "biz_doc_001",
+    "status": "pending_admin_approval",
+    "documentUrl": "https://storage.example.com/business/biz_doc_001.pdf",
+    "message": "관리자 승인 대기 중입니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.3. 매출 인증 - API 간편인증
+
+- **Endpoint**: `POST /client-verifications/revenue/api/start`
+- **설명**: 매출 API 간편인증 시작 (국세청 연동 등)
+- **인증**: 필수 (경영자)
+- **Request**:
+```json
+{
+  "businessNumber": "123-45-67890",
+  "year": 2024,
+  "consentToken": "user_consent_token"
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "rev_verify_001",
+    "status": "verified",
+    "revenueAmount": 5000000000,
+    "year": 2024,
+    "badgeLevel": "high_revenue"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.4. 매출 인증 - 서류 제출
+
+- **Endpoint**: `POST /client-verifications/revenue/document`
+- **설명**: 재무제표 또는 손익계산서 업로드
+- **인증**: 필수 (경영자)
+- **Request**: multipart/form-data
+```
+file: [재무제표 파일]
+year: 2024
+revenueAmount: 5000000000
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "rev_doc_001",
+    "status": "pending_admin_approval",
+    "documentUrl": "https://storage.example.com/revenue/rev_doc_001.pdf"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.5. 연봉 인증 - API 간편인증
+
+- **Endpoint**: `POST /client-verifications/salary/api/start`
+- **설명**: 연봉 API 간편인증 시작 (금융기관 연동)
+- **인증**: 필수 (경영자)
+- **Request**:
+```json
+{
+  "bankCode": "001",
+  "accountNumber": "123-456789-01",
+  "consentToken": "user_consent_token"
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "sal_verify_001",
+    "status": "verified",
+    "annualSalary": 150000000,
+    "badgeLevel": "high_income"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.6. 연봉 인증 - 서류 제출
+
+- **Endpoint**: `POST /client-verifications/salary/document`
+- **설명**: 근로소득 원천징수영수증 업로드
+- **인증**: 필수 (경영자)
+- **Request**: multipart/form-data
+```
+file: [원천징수영수증 파일]
+year: 2024
+annualSalary: 150000000
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "sal_doc_001",
+    "status": "pending_admin_approval",
+    "documentUrl": "https://storage.example.com/salary/sal_doc_001.pdf"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 2.7. 내 인증 현황 조회
+
+- **Endpoint**: `GET /client-verifications/my`
+- **설명**: 경영자의 모든 인증 현황 조회
+- **인증**: 필수 (경영자)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "identityVerified": true,
+    "businessVerification": {
+      "status": "approved",
+      "verifiedAt": "2025-01-10T10:00:00Z",
+      "badgeAwarded": true
+    },
+    "revenueVerification": {
+      "status": "pending_admin_approval",
+      "submittedAt": "2025-01-14T15:00:00Z",
+      "badgeAwarded": false
+    },
+    "salaryVerification": {
+      "status": "approved",
+      "verifiedAt": "2025-01-12T11:00:00Z",
+      "badgeAwarded": true
+    },
+    "badges": ["business_verified", "high_income"]
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+---
+
+## 3. 본인인증 API (NICE Verification)
+
+### 3.1. 본인인증 시작
 
 - **Endpoint**: `POST /verification/nice/start`
 - **설명**: NICE 본인인증 프로세스 시작 (서버에서 NICE API 호출)
@@ -245,7 +434,7 @@ Authorization: Bearer <Supabase_JWT_Token>
 }
 ```
 
-### 2.2. 본인인증 결과 확인
+### 3.2. 본인인증 결과 확인
 
 - **Endpoint**: `POST /verification/nice/callback`
 - **설명**: NICE 인증 완료 후 콜백 처리 (서버에서 NICE 결과 검증)
@@ -274,9 +463,9 @@ Authorization: Bearer <Supabase_JWT_Token>
 
 ---
 
-## 3. 비서 프로필 API (Secretary Profiles)
+## 4. 비서 프로필 API (Secretary Profiles)
 
-### 3.1. 비서 프로필 조회 (본인)
+### 4.1. 비서 프로필 조회 (본인)
 
 - **Endpoint**: `GET /secretary-profiles/me`
 - **설명**: 로그인한 비서의 프로필 조회
@@ -291,13 +480,43 @@ Authorization: Bearer <Supabase_JWT_Token>
     "name": "김비서",
     "email": "secretary@example.com",
     "phone": "010-9876-5432",
-    "profileImageUrl": "https://storage.example.com/profiles/sec123.jpg",
+    "profileImages": [
+      {
+        "id": "img_001",
+        "url": "https://storage.example.com/profiles/sec123_1.jpg",
+        "order": 1,
+        "isPrimary": true
+      },
+      {
+        "id": "img_002",
+        "url": "https://storage.example.com/profiles/sec123_2.jpg",
+        "order": 2,
+        "isPrimary": false
+      }
+    ],
     "bio": "10년 경력의 전문 비서입니다.",
     "experience": "대기업 임원 비서 5년, 개인 비서 5년",
+    "education": "서울대학교 경영학과 졸업",
+    "skills": ["문서 작성", "일정 관리", "회의 준비", "영어 통역"],
+    "categories": ["business_secretary", "travel_secretary"],
+    "badges": [
+      {
+        "id": "badge_english",
+        "name": "영어 가능",
+        "icon": "🇬🇧",
+        "verifiedAt": "2025-01-05T10:00:00Z"
+      },
+      {
+        "id": "badge_driving",
+        "name": "운전 가능",
+        "icon": "🚗",
+        "verifiedAt": "2025-01-05T10:00:00Z"
+      }
+    ],
     "availableRegions": ["서울", "경기"],
     "rating": 4.8,
     "reviewCount": 23,
-    "approvalStatus": "approved", // pending | approved | rejected
+    "approvalStatus": "approved",
     "verifiedAt": "2025-01-10T12:00:00Z",
     "createdAt": "2025-01-05T10:00:00Z"
   },
@@ -305,7 +524,7 @@ Authorization: Bearer <Supabase_JWT_Token>
 }
 ```
 
-### 3.2. 비서 프로필 수정
+### 4.2. 비서 프로필 수정
 
 - **Endpoint**: `PUT /secretary-profiles/me`
 - **설명**: 비서 프로필 정보 수정
@@ -313,9 +532,11 @@ Authorization: Bearer <Supabase_JWT_Token>
 - **Request**:
 ```json
 {
-  "profileImageUrl": "https://storage.example.com/profiles/sec123_new.jpg",
   "bio": "15년 경력의 전문 비서입니다.",
   "experience": "대기업 임원 비서 10년, 개인 비서 5년",
+  "education": "서울대학교 경영학과 졸업",
+  "skills": ["문서 작성", "일정 관리", "회의 준비", "영어 통역", "중국어 회화"],
+  "categories": ["business_secretary", "travel_secretary", "personal_secretary"],
   "availableRegions": ["서울", "경기", "인천"]
 }
 ```
@@ -331,20 +552,106 @@ Authorization: Bearer <Supabase_JWT_Token>
 }
 ```
 
-### 3.3. 비서 검색 (경영자용)
+### 4.3. 프로필 이미지 추가
+
+- **Endpoint**: `POST /secretary-profiles/me/images`
+- **설명**: 프로필 이미지 추가 (다중 업로드)
+- **인증**: 필수 (비서)
+- **Request**: multipart/form-data
+```
+file: [이미지 파일]
+order: 3
+isPrimary: false
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "imageId": "img_003",
+    "url": "https://storage.example.com/profiles/sec123_3.jpg",
+    "order": 3,
+    "isPrimary": false
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 4.4. 프로필 이미지 삭제
+
+- **Endpoint**: `DELETE /secretary-profiles/me/images/:imageId`
+- **설명**: 특정 프로필 이미지 삭제
+- **인증**: 필수 (비서)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "message": "이미지가 삭제되었습니다.",
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 4.5. 배지 추가
+
+- **Endpoint**: `POST /secretary-profiles/me/badges`
+- **설명**: 비서 배지 추가
+- **인증**: 필수 (비서)
+- **Request**:
+```json
+{
+  "badgeType": "english", // english | driving | cooking | yoga 등
+  "proofDocument": "https://storage.example.com/badges/toeic_900.pdf" // 선택
+}
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "badgeId": "badge_003",
+    "badgeType": "english",
+    "name": "영어 가능",
+    "status": "pending_verification",
+    "message": "관리자 승인 대기 중입니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 4.6. 배지 삭제
+
+- **Endpoint**: `DELETE /secretary-profiles/me/badges/:badgeId`
+- **설명**: 배지 삭제
+- **인증**: 필수 (비서)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "message": "배지가 삭제되었습니다.",
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 4.7. 비서 검색 (경영자용 - 고급 필터)
 
 - **Endpoint**: `GET /secretaries`
-- **설명**: 비서 목록 조회 (필터링, 정렬)
+- **설명**: 비서 목록 조회 (고급 필터링, 정렬)
 - **인증**: 필수 (경영자)
 - **Query Parameters**:
+  - `keyword`: 검색어 (이름, 소개 내용)
   - `region`: 지역 필터 (예: "서울")
+  - `minAge`: 최소 나이
+  - `maxAge`: 최대 나이
+  - `gender`: 성별 (male | female | other)
+  - `categories`: 비서 카테고리 (예: "business_secretary,personal_secretary")
+  - `badges`: 필수 배지 (예: "english,driving")
   - `minRating`: 최소 평점 (예: 4.0)
   - `sortBy`: 정렬 기준 (rating | reviewCount | createdAt)
   - `page`: 페이지 번호 (기본값: 1)
   - `limit`: 페이지당 항목 수 (기본값: 20)
 - **Request 예시**:
 ```
-GET /secretaries?region=서울&minRating=4.0&sortBy=rating&page=1&limit=10
+GET /secretaries?keyword=영어&region=서울&minAge=25&maxAge=35&gender=female&categories=business_secretary&badges=english,driving&minRating=4.0&sortBy=rating&page=1&limit=10
 ```
 - **Response (성공 - 200)**:
 ```json
@@ -1223,6 +1530,304 @@ documentType: "id_card" | "career_certificate" | "other"
 | FILE_TOO_LARGE | 파일 크기가 너무 큽니다 (최대 5MB) | 400 |
 | INVALID_FILE_TYPE | 지원하지 않는 파일 형식입니다 | 400 |
 | SERVER_ERROR | 서버 오류가 발생했습니다 | 500 |
+
+---
+
+## 12. 프로필 열람 결제 API (Profile View Payment)
+
+### 12.1. 프로필 열람 결제 시작
+
+- **Endpoint**: `POST /payments/profile-view/initiate`
+- **설명**: 비서 프로필 전체 열람을 위한 결제 시작
+- **인증**: 필수 (경영자)
+- **Request**:
+```json
+{
+  "secretaryProfileId": "prof_sec_001",
+  "paymentMethod": "card" // card | kakao_pay | naver_pay
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "paymentId": "pv_pay_001",
+    "amount": 10000,
+    "paymentUrl": "https://pg.example.com/pay/abc123",
+    "expiresIn": 600
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 12.2. 프로필 열람 결제 완료 확인
+
+- **Endpoint**: `GET /payments/profile-view/:paymentId/status`
+- **설명**: 결제 완료 여부 확인
+- **인증**: 필수 (경영자)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "paymentId": "pv_pay_001",
+    "status": "completed",
+    "secretaryProfileId": "prof_sec_001",
+    "amount": 10000,
+    "paidAt": "2025-01-15T10:35:00Z",
+    "accessGranted": true
+  },
+  "timestamp": "2025-01-15T10:35:00Z"
+}
+```
+
+### 12.3. 열람 권한 확인
+
+- **Endpoint**: `GET /secretary-profiles/:id/access`
+- **설명**: 특정 비서 프로필에 대한 열람 권한 확인
+- **인증**: 필수 (경영자)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "hasAccess": true,
+    "accessGrantedAt": "2025-01-15T10:35:00Z",
+    "viewType": "full" // preview | full
+  },
+  "timestamp": "2025-01-15T10:40:00Z"
+}
+```
+
+---
+
+## 13. 관리자 - 경영자 인증 승인 API
+
+### 13.1. 경영자 인증 대기 목록
+
+- **Endpoint**: `GET /admin/client-verifications/pending`
+- **설명**: 승인 대기 중인 경영자 인증 목록
+- **인증**: 필수 (관리자)
+- **Query Parameters**:
+  - `verificationType`: business | revenue | salary
+  - `page`, `limit`
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verifications": [
+      {
+        "id": "biz_doc_001",
+        "clientId": "usr_client_001",
+        "clientName": "홍길동",
+        "verificationType": "business",
+        "documentUrl": "https://storage.example.com/business/biz_doc_001.pdf",
+        "submittedAt": "2025-01-14T10:00:00Z",
+        "status": "pending_admin_approval"
+      }
+    ],
+    "pagination": {
+      "currentPage": 1,
+      "totalPages": 2,
+      "totalItems": 15
+    }
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 13.2. 경영자 인증 승인
+
+- **Endpoint**: `POST /admin/client-verifications/:id/approve`
+- **설명**: 경영자 인증 승인 및 배지 부여
+- **인증**: 필수 (관리자)
+- **Request**:
+```json
+{
+  "badgeLevel": "verified", // verified | high_revenue | high_income 등
+  "adminNote": "서류 확인 완료"
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "biz_doc_001",
+    "status": "approved",
+    "badgeAwarded": "business_verified",
+    "message": "인증이 승인되었습니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 13.3. 경영자 인증 거부
+
+- **Endpoint**: `POST /admin/client-verifications/:id/reject`
+- **설명**: 경영자 인증 거부
+- **인증**: 필수 (관리자)
+- **Request**:
+```json
+{
+  "reason": "제출된 서류가 불완전합니다.",
+  "adminNote": "사업자등록증 재제출 필요"
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "verificationId": "biz_doc_001",
+    "status": "rejected",
+    "message": "인증이 거부되었습니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+---
+
+## 14. 관리자 - 시스템 설정 API
+
+### 14.1. 프로필 열람비 조회
+
+- **Endpoint**: `GET /admin/settings/pricing/profile-view`
+- **설명**: 현재 프로필 열람비 조회
+- **인증**: 필수 (관리자)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "amount": 10000,
+    "currency": "KRW",
+    "updatedAt": "2025-01-10T10:00:00Z",
+    "updatedBy": "admin_001"
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 14.2. 프로필 열람비 설정
+
+- **Endpoint**: `PUT /admin/settings/pricing/profile-view`
+- **설명**: 프로필 열람비 변경
+- **인증**: 필수 (관리자)
+- **Request**:
+```json
+{
+  "amount": 15000
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "amount": 15000,
+    "currency": "KRW",
+    "message": "프로필 열람비가 변경되었습니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 14.3. 매칭 수수료 설정
+
+- **Endpoint**: `PUT /admin/settings/pricing/commission`
+- **설명**: 매칭 수수료율 설정
+- **인증**: 필수 (관리자)
+- **Request**:
+```json
+{
+  "rate": 0.05 // 5%
+}
+```
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "rate": 0.05,
+    "message": "수수료율이 변경되었습니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 14.4. 배지 목록 관리
+
+- **Endpoint**: `GET /admin/settings/badges`
+- **설명**: 전체 배지 목록 조회
+- **인증**: 필수 (관리자)
+- **Response (성공 - 200)**:
+```json
+{
+  "success": true,
+  "data": {
+    "secretaryBadges": [
+      {
+        "id": "badge_english",
+        "name": "영어 가능",
+        "icon": "🇬🇧",
+        "requiresVerification": true
+      },
+      {
+        "id": "badge_driving",
+        "name": "운전 가능",
+        "icon": "🚗",
+        "requiresVerification": true
+      }
+    ],
+    "clientBadges": [
+      {
+        "id": "badge_business_verified",
+        "name": "사업자 인증",
+        "icon": "🏢",
+        "requiresVerification": true
+      },
+      {
+        "id": "badge_high_revenue",
+        "name": "고매출 인증",
+        "icon": "💰",
+        "requiresVerification": true
+      }
+    ]
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
+
+### 14.5. 배지 추가
+
+- **Endpoint**: `POST /admin/settings/badges`
+- **설명**: 새로운 배지 추가
+- **인증**: 필수 (관리자)
+- **Request**:
+```json
+{
+  "badgeType": "secretary", // secretary | client
+  "id": "badge_chinese",
+  "name": "중국어 가능",
+  "icon": "🇨🇳",
+  "requiresVerification": true
+}
+```
+- **Response (성공 - 201)**:
+```json
+{
+  "success": true,
+  "data": {
+    "badgeId": "badge_chinese",
+    "message": "배지가 추가되었습니다."
+  },
+  "timestamp": "2025-01-15T10:30:00Z"
+}
+```
 
 ---
 
