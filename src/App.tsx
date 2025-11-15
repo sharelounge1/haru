@@ -9,6 +9,10 @@ import SecretarySignupScreen from './components/screens/auth/SecretarySignupScre
 
 // Client Screens
 import ClientHomeScreen from './components/screens/client/ClientHomeScreen'
+import ClientSearchScreen from './components/screens/client/ClientSearchScreen'
+import ClientJobsScreen from './components/screens/client/ClientJobsScreen'
+import ClientMessagesScreen from './components/screens/client/ClientMessagesScreen'
+import ClientMyScreen from './components/screens/client/ClientMyScreen'
 import ClientVerificationsScreen from './components/screens/client/ClientVerificationsScreen'
 import SecretarySearchScreen from './components/screens/client/SecretarySearchScreen'
 import JobRequestListScreen from './components/screens/client/JobRequestListScreen'
@@ -16,6 +20,10 @@ import JobRequestCreateScreen from './components/screens/client/JobRequestCreate
 
 // Secretary Screens
 import SecretaryHomeScreen from './components/screens/secretary/SecretaryHomeScreen'
+import SecretaryExploreScreen from './components/screens/secretary/SecretaryExploreScreen'
+import SecretaryActivityScreen from './components/screens/secretary/SecretaryActivityScreen'
+import SecretaryMessagesScreen from './components/screens/secretary/SecretaryMessagesScreen'
+import SecretaryMyScreen from './components/screens/secretary/SecretaryMyScreen'
 import SecretaryJobSearchScreen from './components/screens/secretary/SecretaryJobSearchScreen'
 
 // Admin Screens
@@ -34,15 +42,29 @@ function App() {
         <Route path="/signup/client" element={<ClientSignupScreen />} />
         <Route path="/signup/secretary" element={<SecretarySignupScreen />} />
 
-        {/* Client Routes */}
+        {/* Client Routes - Mobile App Style */}
         <Route path="/client" element={<ClientHomeScreen />} />
+        <Route path="/client/search" element={<ClientSearchScreen />} />
+        <Route path="/client/jobs" element={<ClientJobsScreen />} />
+        <Route path="/client/jobs/create" element={<JobRequestCreateScreen />} />
+        <Route path="/client/messages" element={<ClientMessagesScreen />} />
+        <Route path="/client/my" element={<ClientMyScreen />} />
+        <Route path="/client/my/verifications" element={<ClientVerificationsScreen />} />
+
+        {/* Client Routes - Legacy */}
         <Route path="/client/verifications" element={<ClientVerificationsScreen />} />
         <Route path="/client/secretary-search" element={<SecretarySearchScreen />} />
         <Route path="/client/job-requests" element={<JobRequestListScreen />} />
         <Route path="/client/job-requests/create" element={<JobRequestCreateScreen />} />
 
-        {/* Secretary Routes */}
+        {/* Secretary Routes - Mobile App Style */}
         <Route path="/secretary" element={<SecretaryHomeScreen />} />
+        <Route path="/secretary/explore" element={<SecretaryExploreScreen />} />
+        <Route path="/secretary/activity" element={<SecretaryActivityScreen />} />
+        <Route path="/secretary/messages" element={<SecretaryMessagesScreen />} />
+        <Route path="/secretary/my" element={<SecretaryMyScreen />} />
+
+        {/* Secretary Routes - Legacy */}
         <Route path="/secretary/job-search" element={<SecretaryJobSearchScreen />} />
 
         {/* Admin Routes */}
