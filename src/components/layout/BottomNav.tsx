@@ -35,10 +35,10 @@ export default function BottomNav({ type }: BottomNavProps) {
       activePattern: /^\/client\/jobs/
     },
     {
-      path: '/client/messages',
+      path: '/client/matching',
       icon: <MessageSquare className="w-6 h-6" />,
-      label: '메시지',
-      activePattern: /^\/client\/messages/
+      label: '매칭내역',
+      activePattern: /^\/client\/matching/
     },
     {
       path: '/client/my',
@@ -68,10 +68,10 @@ export default function BottomNav({ type }: BottomNavProps) {
       activePattern: /^\/secretary\/activity/
     },
     {
-      path: '/secretary/messages',
+      path: '/secretary/matching',
       icon: <MessageSquare className="w-6 h-6" />,
-      label: '메시지',
-      activePattern: /^\/secretary\/messages/
+      label: '매칭내역',
+      activePattern: /^\/secretary\/matching/
     },
     {
       path: '/secretary/my',

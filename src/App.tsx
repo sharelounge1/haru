@@ -21,6 +21,9 @@ import ContractsScreen from './components/screens/ContractsScreen'
 import PaymentsScreen from './components/screens/PaymentsScreen'
 import SettingsScreen from './components/screens/SettingsScreen'
 
+// Matching Screen
+import MatchingScreen from './components/screens/MatchingScreen'
+
 // Client Screens
 import ClientHomeScreen from './components/screens/client/ClientHomeScreen'
 import ClientHomeScreenAlt from './components/screens/client/ClientHomeScreenAlt'
@@ -70,6 +73,11 @@ function App() {
         <Route path="/my/contracts" element={<ContractsScreen />} />
         <Route path="/my/payments" element={<PaymentsScreen />} />
         <Route path="/my/settings" element={<SettingsScreen />} />
+
+        {/* Matching Route */}
+        <Route path="/matching" element={<MatchingScreen />} />
+        <Route path="/client/matching" element={<MatchingScreen />} />
+        <Route path="/secretary/matching" element={<MatchingScreen />} />
 
         {/* Client Routes - Mobile App Style */}
         <Route path="/client" element={<ClientHomeScreen />} />
