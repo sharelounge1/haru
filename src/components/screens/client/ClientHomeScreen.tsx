@@ -260,7 +260,7 @@ export default function ClientHomeScreen() {
 
       {/* CTA Buttons */}
       <div className="px-4 py-6 bg-[#0F0F0F]">
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Link to="/client/search">
             <Button className="w-full h-14 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-lg font-bold shadow-lg shadow-[#FF783B]/20 hover:shadow-xl hover:shadow-[#FF783B]/30 transition-all active:scale-98 rounded-2xl">
               <Search className="w-5 h-5 mr-2" />
