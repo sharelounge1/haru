@@ -9,6 +9,7 @@ import SecretarySignupScreen from './components/screens/auth/SecretarySignupScre
 
 // Client Screens
 import ClientHomeScreen from './components/screens/client/ClientHomeScreen'
+import ClientHomeScreenAlt from './components/screens/client/ClientHomeScreenAlt'
 import ClientSearchScreen from './components/screens/client/ClientSearchScreen'
 import ClientJobsScreen from './components/screens/client/ClientJobsScreen'
 import ClientMessagesScreen from './components/screens/client/ClientMessagesScreen'
@@ -44,6 +45,7 @@ function App() {
 
         {/* Client Routes - Mobile App Style */}
         <Route path="/client" element={<ClientHomeScreen />} />
+        <Route path="/client1" element={<ClientHomeScreenAlt />} />
         <Route path="/client/search" element={<ClientSearchScreen />} />
         <Route path="/client/jobs" element={<ClientJobsScreen />} />
         <Route path="/client/jobs/create" element={<JobRequestCreateScreen />} />
