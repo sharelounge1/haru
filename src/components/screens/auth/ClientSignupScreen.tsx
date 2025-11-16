@@ -38,6 +38,8 @@ export default function ClientSignupScreen() {
     setLoading(true)
 
     try {
+      console.log('📝 회원가입 시작...')
+
       await signUp({
         email: formData.email,
         password: formData.password,
@@ -46,12 +48,14 @@ export default function ClientSignupScreen() {
         phone: formData.phone,
       })
 
+      console.log('✅ 회원가입 성공! 성공 화면으로 전환...')
+
       // 회원가입 성공
       setSuccess(true)
-      setLoading(false)
     } catch (err: any) {
-      console.error('Signup error:', err)
+      console.error('❌ 회원가입 오류:', err)
       setError(err.message || '회원가입에 실패했습니다. 다시 시도해주세요.')
+    } finally {
       setLoading(false)
     }
   }
