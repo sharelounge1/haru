@@ -278,18 +278,27 @@ CREATE TRIGGER update_reviews_updated_at BEFORE UPDATE ON reviews
 
 -- 5.3 신규 사용자 프로필 자동 생성 함수
 CREATE OR REPLACE FUNCTION create_user_profile()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SECURITY DEFINER
+SET search_path = public
+LANGUAGE plpgsql
+AS $$
 BEGIN
-  INSERT INTO users (id, email, user_type, name)
+  INSERT INTO users (id, email, user_type, name, phone)
   VALUES (
     NEW.id,
     NEW.email,
-    COALESCE(NEW.raw_user_meta_data->>'user_type', 'client')::user_type,
-    COALESCE(NEW.raw_user_meta_data->>'name', 'User')
+    COALESCE((NEW.raw_user_meta_data->>'user_type')::user_type, 'client'),
+    COALESCE(NEW.raw_user_meta_data->>'name', ''),
+    COALESCE(NEW.raw_user_meta_data->>'phone', '')
   );
   RETURN NEW;
+EXCEPTION
+  WHEN others THEN
+    RAISE WARNING 'Failed to create user profile: %', SQLERRM;
+    RETURN NULL;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Auth 사용자 생성시 자동으로 프로필 생성
 CREATE TRIGGER on_auth_user_created
