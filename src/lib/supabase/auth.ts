@@ -18,6 +18,7 @@ export interface SignInData {
  * 회원가입
  */
 export async function signUp(data: SignUpData) {
+  // 1. Supabase Auth에 사용자 생성
   const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
@@ -31,25 +32,47 @@ export async function signUp(data: SignUpData) {
   })
 
   if (error) throw error
+  if (!authData.user) throw new Error('User creation failed')
 
-  // 프로필 생성은 데이터베이스 트리거에서 자동 처리됨
-  // user_type에 따라 client_profiles 또는 secretary_profiles 생성
-  if (authData.user && data.userType === 'client') {
+  // 2. users 테이블에 기본 정보 저장
+  const { error: userError } = await supabase
+    .from('users')
+    .insert({
+      id: authData.user.id,
+      email: data.email,
+      name: data.name,
+      phone: data.phone || '',
+      user_type: data.userType
+    })
+
+  if (userError) {
+    console.error('User table insert error:', userError)
+    throw new Error('Database error saving new user')
+  }
+
+  // 3. user_type에 따라 client_profiles 또는 secretary_profiles 생성
+  if (data.userType === 'client') {
     const { error: profileError } = await supabase
       .from('client_profiles')
       .insert({
         user_id: authData.user.id
       })
 
-    if (profileError) console.error('Profile creation error:', profileError)
-  } else if (authData.user && data.userType === 'secretary') {
+    if (profileError) {
+      console.error('Client profile creation error:', profileError)
+      throw new Error('Failed to create client profile')
+    }
+  } else if (data.userType === 'secretary') {
     const { error: profileError } = await supabase
       .from('secretary_profiles')
       .insert({
         user_id: authData.user.id
       })
 
-    if (profileError) console.error('Profile creation error:', profileError)
+    if (profileError) {
+      console.error('Secretary profile creation error:', profileError)
+      throw new Error('Failed to create secretary profile')
+    }
   }
 
   return authData
