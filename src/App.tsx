@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
 
 // Auth Screens
 import LandingScreen from './components/screens/auth/LandingScreen'
@@ -51,8 +52,9 @@ import AdminSystemSettingsScreen from './components/screens/admin/AdminSystemSet
 
 function App() {
   return (
-    <div className="min-h-screen bg-background">
-      <Routes>
+    <AuthProvider>
+      <div className="min-h-screen bg-background">
+        <Routes>
         {/* Auth Routes */}
         <Route path="/" element={<LandingScreen />} />
         <Route path="/login" element={<LoginScreen />} />
@@ -109,8 +111,9 @@ function App() {
         <Route path="/admin" element={<AdminDashboardScreen />} />
         <Route path="/admin/verifications" element={<AdminClientVerificationScreen />} />
         <Route path="/admin/settings" element={<AdminSystemSettingsScreen />} />
-      </Routes>
-    </div>
+        </Routes>
+      </div>
+    </AuthProvider>
   )
 }
 

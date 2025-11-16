@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,19 +9,25 @@ import { Sparkles, ArrowLeft } from 'lucide-react'
 
 export default function LoginScreen() {
   const navigate = useNavigate()
+  const { signIn } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement actual login logic
-    // For now, mock redirect based on email
-    if (email.includes('admin')) {
-      navigate('/admin')
-    } else if (email.includes('secretary')) {
+    setError('')
+    setLoading(true)
+
+    try {
+      await signIn(email, password)
       navigate('/home')
-    } else {
-      navigate('/home')
+    } catch (err: any) {
+      console.error('Login error:', err)
+      setError(err.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -50,21 +57,30 @@ export default function LoginScreen() {
           <p className="text-gray-400">하루비서에 오신 것을 환영합니다</p>
         </div>
 
+        {/* Login Form */}
         <Card className="bg-[#1A1A1A] border-[#2A2A2A] shadow-2xl">
-          <CardContent className="pt-6">
-            <form onSubmit={handleLogin} className="space-y-5">
+          <CardContent className="p-6">
+            <form onSubmit={handleLogin} className="space-y-4">
+              {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                  <p className="text-sm text-red-400">{error}</p>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-gray-300">이메일</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="example@email.com"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-[#0F0F0F] border-[#2A2A2A] text-white h-12 focus:border-[#FF783B]"
                   required
-                  className="bg-[#0F0F0F] border-[#2A2A2A] text-white placeholder:text-gray-500 focus:border-[#FF783B] h-12"
+                  disabled={loading}
                 />
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-gray-300">비밀번호</Label>
                 <Input
@@ -73,40 +89,41 @@ export default function LoginScreen() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-[#0F0F0F] border-[#2A2A2A] text-white h-12 focus:border-[#FF783B]"
                   required
-                  className="bg-[#0F0F0F] border-[#2A2A2A] text-white placeholder:text-gray-500 focus:border-[#FF783B] h-12"
+                  disabled={loading}
                 />
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <Link to="/forgot-password" className="text-[#FF783B] hover:text-[#FF783B]/80">
-                  비밀번호 찾기
-                </Link>
-              </div>
+
               <Button
                 type="submit"
-                className="w-full h-12 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-base font-bold shadow-lg shadow-[#FF783B]/20"
+                className="w-full h-12 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white font-semibold shadow-lg shadow-[#FF783B]/20"
+                disabled={loading}
               >
-                로그인
+                {loading ? '로그인 중...' : '로그인'}
               </Button>
+
+              <div className="text-center pt-2">
+                <Link
+                  to="/signup"
+                  className="text-sm text-gray-400 hover:text-[#FF783B] transition-colors"
+                >
+                  계정이 없으신가요? <span className="text-[#FF783B] font-medium">회원가입</span>
+                </Link>
+              </div>
             </form>
-
-            <div className="mt-6 text-center text-sm">
-              <span className="text-gray-400">계정이 없으신가요? </span>
-              <Link to="/signup" className="text-[#FF783B] hover:text-[#FF783B]/80 font-medium">
-                회원가입
-              </Link>
-            </div>
-
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => navigate('/home')}
-                className="text-gray-500 hover:text-gray-400 text-sm"
-              >
-                로그인 없이 둘러보기
-              </button>
-            </div>
           </CardContent>
         </Card>
+
+        {/* Browse without login */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/home"
+            className="text-gray-400 hover:text-white text-sm transition-colors"
+          >
+            로그인 없이 둘러보기 →
+          </Link>
+        </div>
       </div>
     </div>
   )
