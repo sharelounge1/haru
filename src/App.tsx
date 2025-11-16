@@ -1,6 +1,10 @@
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
 
+// Splash & Guest Screens
+import SplashScreen from './components/screens/SplashScreen'
+import GuestHomeScreen from './components/screens/GuestHomeScreen'
+
 // Auth Screens
 import LandingScreen from './components/screens/auth/LandingScreen'
 import LoginScreen from './components/screens/auth/LoginScreen'
@@ -55,8 +59,12 @@ function App() {
     <AuthProvider>
       <div className="min-h-screen bg-background">
         <Routes>
+        {/* Splash & Guest Routes */}
+        <Route path="/" element={<SplashScreen />} />
+        <Route path="/guest/home" element={<GuestHomeScreen />} />
+
         {/* Auth Routes */}
-        <Route path="/" element={<LandingScreen />} />
+        <Route path="/landing" element={<LandingScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/signup" element={<SignupTypeScreen />} />
         <Route path="/signup/client" element={<ClientSignupScreen />} />
