@@ -18,6 +18,14 @@ export interface SignInData {
  * 회원가입
  */
 export async function signUp(data: SignUpData) {
+  // 디버깅: 회원가입 시도 정보
+  console.log('🔵 회원가입 시도:', {
+    email: data.email,
+    userType: data.userType,
+    name: data.name,
+    phone: data.phone
+  })
+
   // 1. Supabase Auth에 사용자 생성
   // users 테이블은 데이터베이스 트리거에서 자동으로 생성됨
   const { data: authData, error } = await supabase.auth.signUp({
@@ -32,14 +40,33 @@ export async function signUp(data: SignUpData) {
     }
   })
 
-  if (error) throw error
-  if (!authData.user) throw new Error('User creation failed')
+  if (error) {
+    console.error('🔴 Supabase Auth 오류:', error)
+    console.error('🔴 오류 상세:', {
+      message: error.message,
+      status: error.status,
+      name: error.name
+    })
+    throw error
+  }
+
+  if (!authData.user) {
+    console.error('🔴 사용자 생성 실패: authData.user가 null')
+    throw new Error('User creation failed')
+  }
+
+  console.log('✅ Auth 사용자 생성 성공:', {
+    userId: authData.user.id,
+    email: authData.user.email
+  })
 
   // 2. user_type에 따라 client_profiles 또는 secretary_profiles 생성
   // 트리거에서 users 테이블이 생성된 후 실행되므로 짧은 지연 추가
+  console.log('⏳ 트리거 실행 대기 중 (500ms)...')
   await new Promise(resolve => setTimeout(resolve, 500))
 
   if (data.userType === 'client') {
+    console.log('🔵 client_profiles 생성 시도...')
     const { error: profileError } = await supabase
       .from('client_profiles')
       .insert({
@@ -47,10 +74,12 @@ export async function signUp(data: SignUpData) {
       })
 
     if (profileError) {
-      console.error('Client profile creation error:', profileError)
+      console.error('🔴 Client profile 생성 오류:', profileError)
       throw new Error('Failed to create client profile')
     }
+    console.log('✅ Client profile 생성 성공')
   } else if (data.userType === 'secretary') {
+    console.log('🔵 secretary_profiles 생성 시도...')
     const { error: profileError } = await supabase
       .from('secretary_profiles')
       .insert({
@@ -58,11 +87,13 @@ export async function signUp(data: SignUpData) {
       })
 
     if (profileError) {
-      console.error('Secretary profile creation error:', profileError)
+      console.error('🔴 Secretary profile 생성 오류:', profileError)
       throw new Error('Failed to create secretary profile')
     }
+    console.log('✅ Secretary profile 생성 성공')
   }
 
+  console.log('✅ 회원가입 완료!')
   return authData
 }
 
