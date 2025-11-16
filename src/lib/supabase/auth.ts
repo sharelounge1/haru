@@ -28,6 +28,8 @@ export async function signUp(data: SignUpData) {
 
   // 1. Supabase Auth에 사용자 생성
   // users 테이블은 데이터베이스 트리거에서 자동으로 생성됨
+  console.log('⏳ Supabase Auth API 호출 중...')
+
   const { data: authData, error } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
@@ -39,6 +41,8 @@ export async function signUp(data: SignUpData) {
       }
     }
   })
+
+  console.log('📦 Auth API 응답 받음:', { authData, error })
 
   if (error) {
     console.error('🔴 Supabase Auth 오류:', error)
@@ -52,12 +56,14 @@ export async function signUp(data: SignUpData) {
 
   if (!authData.user) {
     console.error('🔴 사용자 생성 실패: authData.user가 null')
+    console.log('📦 전체 authData:', authData)
     throw new Error('User creation failed')
   }
 
   console.log('✅ Auth 사용자 생성 성공:', {
     userId: authData.user.id,
-    email: authData.user.email
+    email: authData.user.email,
+    identities: authData.user.identities?.length || 0
   })
 
   // 2. user_type에 따라 client_profiles 또는 secretary_profiles 생성
