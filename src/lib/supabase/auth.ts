@@ -34,6 +34,7 @@ export async function signUp(data: SignUpData) {
     email: data.email,
     password: data.password,
     options: {
+      emailRedirectTo: undefined, // 이메일 확인 비활성화
       data: {
         user_type: data.userType,
         name: data.name,
@@ -42,28 +43,28 @@ export async function signUp(data: SignUpData) {
     }
   })
 
-  console.log('📦 Auth API 응답 받음:', { authData, error })
+  console.log('📦 Auth API 응답 받음:', {
+    user: authData.user?.id,
+    session: authData.session ? 'exists' : 'null',
+    error
+  })
 
   if (error) {
     console.error('🔴 Supabase Auth 오류:', error)
-    console.error('🔴 오류 상세:', {
-      message: error.message,
-      status: error.status,
-      name: error.name
-    })
     throw error
   }
 
   if (!authData.user) {
     console.error('🔴 사용자 생성 실패: authData.user가 null')
-    console.log('📦 전체 authData:', authData)
     throw new Error('User creation failed')
   }
 
+  // session이 null이어도 user가 있으면 성공으로 처리
+  // (이메일 확인 대기 상태)
   console.log('✅ Auth 사용자 생성 성공:', {
     userId: authData.user.id,
     email: authData.user.email,
-    identities: authData.user.identities?.length || 0
+    hasSession: !!authData.session
   })
 
   // 2. user_type에 따라 client_profiles 또는 secretary_profiles 생성
