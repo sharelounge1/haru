@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Users, Briefcase, Star, TrendingUp, ArrowRight } from 'lucide-react'
+import { Users, Briefcase, Star, TrendingUp, ArrowRight, CheckCircle, Search, ShieldCheck } from 'lucide-react'
 
 export default function GuestHomeScreen() {
   return (
@@ -106,7 +106,7 @@ export default function GuestHomeScreen() {
           <Card className="bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FF783B]/50 transition-all">
             <CardHeader>
               <div className="w-12 h-12 rounded-full bg-[#FF783B]/20 flex items-center justify-center mb-4">
-                <span className="text-2xl">✓</span>
+                <CheckCircle className="w-6 h-6 text-[#FF783B]" />
               </div>
               <CardTitle className="text-white">검증된 전문가</CardTitle>
             </CardHeader>
@@ -120,7 +120,7 @@ export default function GuestHomeScreen() {
           <Card className="bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FF783B]/50 transition-all">
             <CardHeader>
               <div className="w-12 h-12 rounded-full bg-[#FF783B]/20 flex items-center justify-center mb-4">
-                <span className="text-2xl">🔍</span>
+                <Search className="w-6 h-6 text-[#FF783B]" />
               </div>
               <CardTitle className="text-white">맞춤형 매칭</CardTitle>
             </CardHeader>
@@ -134,7 +134,7 @@ export default function GuestHomeScreen() {
           <Card className="bg-[#1A1A1A] border-[#2A2A2A] hover:border-[#FF783B]/50 transition-all">
             <CardHeader>
               <div className="w-12 h-12 rounded-full bg-[#FF783B]/20 flex items-center justify-center mb-4">
-                <span className="text-2xl">🛡️</span>
+                <ShieldCheck className="w-6 h-6 text-[#FF783B]" />
               </div>
               <CardTitle className="text-white">안전한 거래</CardTitle>
             </CardHeader>

@@ -1,18 +1,26 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import MobileLayout from '@/components/layout/MobileLayout'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Bell, Search, FileText, Shield, Star, MapPin, Award, Heart, Sparkles, Briefcase, Users } from 'lucide-react'
+import { LoginRequiredDialog } from '@/components/ui/LoginRequiredDialog'
+import { useAuthGuard } from '@/hooks/useAuthGuard'
 
 // User type: 'client' | 'secretary' | 'guest'
 type UserType = 'client' | 'secretary' | 'guest'
 
 export default function UnifiedHomeScreen() {
+  const navigate = useNavigate()
+  const { checkAuth, showLoginDialog, closeDialog } = useAuthGuard()
+
+  // Check if in guest mode
+  const isGuestMode = localStorage.getItem('guestMode') === 'true'
+
   // Mock user data - in real app, this would come from auth context
-  const [userType, setUserType] = useState<UserType>('guest')
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userType, setUserType] = useState<UserType>(isGuestMode ? 'guest' : 'client')
+  const [isLoggedIn, setIsLoggedIn] = useState(!isGuestMode)
 
   const user = {
     name: '김철수',
@@ -105,22 +113,22 @@ export default function UnifiedHomeScreen() {
       return (
         <div className="px-4 py-6 bg-[#0F0F0F]">
           <div className="space-y-6">
-            <Link to={isLoggedIn ? "/search" : "/login"}>
-              <Button className="w-full h-14 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-lg font-bold shadow-lg shadow-[#FF783B]/20 hover:shadow-xl hover:shadow-[#FF783B]/30 transition-all active:scale-98 rounded-2xl">
-                <Search className="w-5 h-5 mr-2" />
-                나에게 맞는 비서 찾기
-              </Button>
-            </Link>
+            <Button
+              onClick={() => checkAuth(() => navigate('/search'))}
+              className="w-full h-14 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-lg font-bold shadow-lg shadow-[#FF783B]/20 hover:shadow-xl hover:shadow-[#FF783B]/30 transition-all active:scale-98 rounded-2xl"
+            >
+              <Search className="w-5 h-5 mr-2" />
+              나에게 맞는 비서 찾기
+            </Button>
 
-            <Link to={isLoggedIn ? "/jobs/create" : "/login"}>
-              <Button
-                variant="outline"
-                className="w-full h-14 bg-transparent border-2 border-[#FF783B] text-[#FF783B] text-lg font-bold hover:bg-[#FF783B]/10 transition-all active:scale-98 rounded-2xl"
-              >
-                <FileText className="w-5 h-5 mr-2" />
-                나에게 필요한 하루 비서 구인하기
-              </Button>
-            </Link>
+            <Button
+              onClick={() => checkAuth(() => navigate('/jobs/create'))}
+              variant="outline"
+              className="w-full h-14 bg-transparent border-2 border-[#FF783B] text-[#FF783B] text-lg font-bold hover:bg-[#FF783B]/10 transition-all active:scale-98 rounded-2xl"
+            >
+              <FileText className="w-5 h-5 mr-2" />
+              나에게 필요한 하루 비서 구인하기
+            </Button>
           </div>
         </div>
       )
@@ -129,22 +137,22 @@ export default function UnifiedHomeScreen() {
       return (
         <div className="px-4 py-6 bg-[#0F0F0F]">
           <div className="space-y-6">
-            <Link to={isLoggedIn ? "/jobs" : "/login"}>
-              <Button className="w-full h-14 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-lg font-bold shadow-lg shadow-[#FF783B]/20 hover:shadow-xl hover:shadow-[#FF783B]/30 transition-all active:scale-98 rounded-2xl">
-                <Briefcase className="w-5 h-5 mr-2" />
-                구인 공고 찾기
-              </Button>
-            </Link>
+            <Button
+              onClick={() => checkAuth(() => navigate('/jobs'))}
+              className="w-full h-14 bg-[#FF783B] hover:bg-[#FF783B]/90 text-white text-lg font-bold shadow-lg shadow-[#FF783B]/20 hover:shadow-xl hover:shadow-[#FF783B]/30 transition-all active:scale-98 rounded-2xl"
+            >
+              <Briefcase className="w-5 h-5 mr-2" />
+              구인 공고 찾기
+            </Button>
 
-            <Link to={isLoggedIn ? "/clients" : "/login"}>
-              <Button
-                variant="outline"
-                className="w-full h-14 bg-transparent border-2 border-[#FF783B] text-[#FF783B] text-lg font-bold hover:bg-[#FF783B]/10 transition-all active:scale-98 rounded-2xl"
-              >
-                <Users className="w-5 h-5 mr-2" />
-                나에게 맞는 경영자 찾기
-              </Button>
-            </Link>
+            <Button
+              onClick={() => checkAuth(() => navigate('/clients'))}
+              variant="outline"
+              className="w-full h-14 bg-transparent border-2 border-[#FF783B] text-[#FF783B] text-lg font-bold hover:bg-[#FF783B]/10 transition-all active:scale-98 rounded-2xl"
+            >
+              <Users className="w-5 h-5 mr-2" />
+              나에게 맞는 경영자 찾기
+            </Button>
           </div>
         </div>
       )
@@ -389,6 +397,12 @@ export default function UnifiedHomeScreen() {
           }
         `}</style>
       </div>
+
+      {/* Login Required Dialog */}
+      <LoginRequiredDialog
+        isOpen={showLoginDialog}
+        onClose={closeDialog}
+      />
     </MobileLayout>
   )
 }

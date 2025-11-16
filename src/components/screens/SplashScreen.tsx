@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Briefcase, Search, ShieldCheck } from 'lucide-react'
 
 export default function SplashScreen() {
   const navigate = useNavigate()
@@ -11,19 +11,19 @@ export default function SplashScreen() {
     {
       title: '전문 비서 매칭',
       description: '검증된 전문 비서와\n바로 연결됩니다',
-      icon: '👔',
+      Icon: Briefcase,
       gradient: 'from-orange-500 to-red-500'
     },
     {
       title: '맞춤형 검색',
       description: '경력, 전문분야, 지역별로\n원하는 비서를 찾으세요',
-      icon: '🔍',
+      Icon: Search,
       gradient: 'from-purple-500 to-pink-500'
     },
     {
       title: '안전한 거래',
       description: '계약부터 결제까지\n안전하게 관리됩니다',
-      icon: '🛡️',
+      Icon: ShieldCheck,
       gradient: 'from-blue-500 to-cyan-500'
     }
   ]
@@ -41,9 +41,9 @@ export default function SplashScreen() {
   }
 
   const handleGuestMode = () => {
-    // 게스트 모드로 앱 접속
+    // 게스트 모드로 메인 화면 접속
     localStorage.setItem('guestMode', 'true')
-    navigate('/guest/home')
+    navigate('/home')
   }
 
   return (
@@ -87,7 +87,7 @@ export default function SplashScreen() {
                 <div className="relative mx-auto w-32 h-32">
                   <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${slide.gradient} opacity-20 blur-2xl`} />
                   <div className={`relative w-32 h-32 rounded-full bg-gradient-to-br ${slide.gradient} flex items-center justify-center shadow-2xl shadow-[#FF783B]/50`}>
-                    <span className="text-6xl">{slide.icon}</span>
+                    <slide.Icon className="w-16 h-16 text-white" strokeWidth={1.5} />
                   </div>
                 </div>
 
