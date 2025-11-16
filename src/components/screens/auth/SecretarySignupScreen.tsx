@@ -9,7 +9,7 @@ import { ArrowLeft, Sparkles } from 'lucide-react'
 
 export default function SecretarySignupScreen() {
   const navigate = useNavigate()
-  const { signUp } = useAuth()
+  const { signUp, signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,6 +19,7 @@ export default function SecretarySignupScreen() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,12 +47,11 @@ export default function SecretarySignupScreen() {
       })
 
       // 회원가입 성공
-      alert('회원가입이 완료되었습니다! 로그인해주세요.')
-      navigate('/login')
+      setSuccess(true)
+      setLoading(false)
     } catch (err: any) {
       console.error('Signup error:', err)
       setError(err.message || '회원가입에 실패했습니다. 다시 시도해주세요.')
-    } finally {
       setLoading(false)
     }
   }
@@ -62,6 +62,101 @@ export default function SecretarySignupScreen() {
       ...prev,
       [name]: value
     }))
+  }
+
+  const handleStartService = async () => {
+    setLoading(true)
+    try {
+      // 자동 로그인
+      await signIn({
+        email: formData.email,
+        password: formData.password,
+      })
+
+      // 게스트 모드 해제
+      localStorage.removeItem('guestMode')
+
+      // 메인 화면으로 이동
+      navigate('/home')
+    } catch (err: any) {
+      console.error('Auto login error:', err)
+      // 로그인 실패 시 로그인 페이지로
+      navigate('/login')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 성공 화면 표시
+  if (success) {
+    return (
+      <div className="min-h-screen bg-[#0F0F0F] flex items-center justify-center px-4 py-8 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-10 w-96 h-96 bg-[#FF783B]/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 left-10 w-72 h-72 bg-[#FF783B]/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="relative w-full max-w-md">
+          {/* Success Icon */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#FF783B] to-[#FF5722] rounded-full mb-6 shadow-2xl shadow-[#FF783B]/50 animate-pulse">
+              <Sparkles className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-3">가입이 완료되었습니다!</h1>
+            <p className="text-gray-300 text-lg leading-relaxed">
+              이제 전문 비서로서<br />
+              프리미엄 매칭 서비스를<br />
+              이용해보세요!
+            </p>
+          </div>
+
+          <Card className="bg-[#1A1A1A] border-[#2A2A2A] shadow-2xl">
+            <CardContent className="p-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-4 bg-[#0F0F0F] rounded-lg border border-[#2A2A2A]">
+                  <div className="w-10 h-10 bg-[#FF783B]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#FF783B] text-xl">✓</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">우수한 경영자와 매칭</p>
+                    <p className="text-gray-400 text-sm">검증된 기업과 안전한 연결</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-4 bg-[#0F0F0F] rounded-lg border border-[#2A2A2A]">
+                  <div className="w-10 h-10 bg-[#FF783B]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#FF783B] text-xl">✓</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">투명한 급여 시스템</p>
+                    <p className="text-gray-400 text-sm">안전하고 신속한 급여 지급</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-4 bg-[#0F0F0F] rounded-lg border border-[#2A2A2A]">
+                  <div className="w-10 h-10 bg-[#FF783B]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#FF783B] text-xl">✓</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">커리어 성장 지원</p>
+                    <p className="text-gray-400 text-sm">전문성 향상 기회 제공</p>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleStartService}
+                  className="w-full h-14 bg-gradient-to-r from-[#FF783B] to-[#FF5722] hover:from-[#FF783B]/90 hover:to-[#FF5722]/90 text-white font-bold text-lg shadow-xl shadow-[#FF783B]/30 mt-6"
+                  disabled={loading}
+                >
+                  {loading ? '로그인 중...' : '서비스 이용하기'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
   }
 
   return (
