@@ -27,14 +27,18 @@ export async function signUp(data: SignUpData) {
   })
 
   // 1. Supabase Auth에 사용자 생성
-  // users 테이블은 데이터베이스 트리거에서 자동으로 생성됨
   console.log('⏳ Supabase Auth API 호출 중...')
 
-  const { data: authData, error } = await supabase.auth.signUp({
+  // Timeout 추가 (30초)
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('회원가입 요청 시간 초과 (30초). Supabase 설정을 확인하세요.')), 30000)
+  })
+
+  const signupPromise = supabase.auth.signUp({
     email: data.email,
     password: data.password,
     options: {
-      emailRedirectTo: undefined, // 이메일 확인 비활성화
+      emailRedirectTo: undefined,
       data: {
         user_type: data.userType,
         name: data.name,
@@ -43,10 +47,12 @@ export async function signUp(data: SignUpData) {
     }
   })
 
+  const { data: authData, error } = await Promise.race([signupPromise, timeoutPromise]) as any
+
   console.log('📦 Auth API 응답 받음:', {
-    user: authData.user?.id,
-    session: authData.session ? 'exists' : 'null',
-    error
+    user: authData?.user?.id || 'null',
+    session: authData?.session ? 'exists' : 'null',
+    error: error?.message || 'none'
   })
 
   if (error) {
